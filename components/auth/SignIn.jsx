@@ -6,11 +6,25 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
+import { useForm } from "react-hook-form";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
+import toast, { Toaster } from "react-hot-toast";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 
 const SignIn = () => {
   const { session } = useContext(UserContext);
   const router = useRouter();
+
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
 
   useEffect(() => {
     if (session?.data.session) {
@@ -18,30 +32,24 @@ const SignIn = () => {
     }
   }, [session]);
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (values) => {
     if (!session) return;
-    const { data: authData, error } = await supabase.auth.signInWithPassword({
-      email: formData.email,
-      password: formData.password,
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: values.email,
+      password: values.password,
     });
 
-    if (authData.user && authData.session) {
+    if (data.user && data.session) {
       location.reload();
     } else {
+      toast.custom((t) => (
+        <span>
+          <Alert variant="destructive">
+            <AlertTitle>Oops, something went wrong...</AlertTitle>
+          </Alert>
+        </span>
+      ));
       console.error(error);
     }
   };
@@ -50,36 +58,68 @@ const SignIn = () => {
     <div className="flex flex-col min-h-screen">
       <NavBar />
       <main>
-        <h1 className="font-bold text-xl">Sign In</h1>
-        <form className="flex flex-col" onSubmit={onSubmit}>
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            placeholder="Email"
-          />
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            name="password"
-            id="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            placeholder="Password"
-          />
-
-          <button type="submit">Submit</button>
-          <Link href={"/signup"} className="text-sm text-blue-500 hover:underline">
-            Not registered? Create Account.
-          </Link>
-        </form>
+        <Card className="mx-auto max-w-96">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <CardHeader>
+                <CardTitle>Sign In</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-2">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  rules={{
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Please enter a valid email address",
+                    },
+                  }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input type="text" placeholder="example@gmail.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="password"
+                  rules={{
+                    required: "Password is required",
+                    minLength: {
+                      value: 8,
+                      message: "Password must be at least 8 characters",
+                    },
+                  }}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input type="password" placeholder="Password" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+              <CardFooter>
+                <Link href={"/signup"} className={`text-xs hover:underline text-blue-700 `}>
+                  Don't have an account? Sign up.
+                </Link>
+                <Button type="submit" className="ml-auto">
+                  Submit
+                </Button>
+              </CardFooter>
+            </form>
+          </Form>
+        </Card>
       </main>
       <Footer />
+      <Toaster />
     </div>
   );
 };

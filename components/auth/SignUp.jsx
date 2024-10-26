@@ -6,13 +6,28 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useForm } from "react-hook-form";
 import Link from "next/link";
+import toast, { Toaster } from "react-hot-toast";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 
 const SignUp = () => {
   const { session } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
   useEffect(() => {
     const handleSearchParams = async () => {
@@ -27,7 +42,14 @@ const SignUp = () => {
             user_id: session.data.session.user.id,
           }),
         });
-        if (response.status === 201) console.log("Success");
+        if (response.status === 201)
+          toast.custom((t) => (
+            <span>
+              <Alert>
+                <AlertTitle>Registration successful</AlertTitle>
+              </Alert>
+            </span>
+          ));
         setTimeout(() => router.push("/"), 1000);
       } else {
         router.push("/");
@@ -41,36 +63,36 @@ const SignUp = () => {
     }
   }, [session]);
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (values) => {
     if (!session || session.data.session) return;
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: formData.email,
-        password: formData.password,
+      const { error } = await supabase.auth.signUp({
+        email: values.email,
+        password: values.password,
       });
       if (error) throw error;
 
+      toast.custom((t) => (
+        <span>
+          <Alert>
+            <AlertTitle>Please confirm your email</AlertTitle>
+          </Alert>
+        </span>
+      ));
       setTimeout(() => {
         router.push("/");
       }, 2000);
     } catch (error) {
+      toast.custom((t) => (
+        <span>
+          <Alert variant="destructive">
+            <AlertTitle>Oops, something went wrong...</AlertTitle>
+          </Alert>
+        </span>
+      ));
+      toast.error("Oops, something went wrong...");
       console.error(error);
     }
-  };
-
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
   };
 
   return (
@@ -81,47 +103,91 @@ const SignUp = () => {
         <p>Loading...</p>
       ) : (
         <main>
-          <h1 className="font-bold text-xl">Sign Up</h1>
-          <form className="flex flex-col" onSubmit={onSubmit}>
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              placeholder="you@example.com"
-            />
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              placeholder="Password"
-            />
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              id="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              placeholder="Confirm Password"
-            />
-            <button type="submit">Submit</button>
-            <Link href={"/signin"} className="text-sm text-blue-500 hover:underline">
-              Already have an account? Sign in.
-            </Link>
-          </form>
+          <Card className="mx-auto max-w-96">
+            <CardHeader>
+              <CardTitle>Sign Up</CardTitle>
+            </CardHeader>
+            <Form {...form}>
+              <form className="" onSubmit={form.handleSubmit(onSubmit)}>
+                <CardContent className="flex flex-col gap-2">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    rules={{
+                      required: "Email is required",
+                      pattern: {
+                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                        message: "Please enter a valid email address",
+                      },
+                    }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input type="text" placeholder="example@gmail.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    rules={{
+                      required: "Password is required",
+                      minLength: {
+                        value: 8,
+                        message: "Password must be at least 8 characters",
+                      },
+                    }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input type="password" placeholder="Password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    rules={{
+                      required: "Confirm password is required",
+                      minLength: {
+                        value: 8,
+                        message: "Password must be at least 8 characters",
+                      },
+                      validate: (value, formValues) => value === formValues.password || "Passwords do not match",
+                    }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Confirm Password</FormLabel>
+                        <FormControl>
+                          <Input type="password" placeholder="Confirm Password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </CardContent>
+                <CardFooter>
+                  <Link href={"/signin"} className={`text-xs hover:underline text-blue-700 `}>
+                    Already have an account? Sign in.
+                  </Link>
+                  <Button type="submit" className="ml-auto">
+                    Submit
+                  </Button>
+                </CardFooter>
+              </form>
+            </Form>
+          </Card>
         </main>
       )}
 
       <Footer />
+      <Toaster />
     </div>
   );
 };
