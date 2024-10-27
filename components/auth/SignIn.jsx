@@ -4,8 +4,6 @@ import { UserContext } from "@/context/UserContext";
 import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import Footer from "@/components/Footer";
-import NavBar from "@/components/NavBar";
 import { useForm } from "react-hook-form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -14,6 +12,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 import { Alert, AlertTitle } from "@/components/ui/alert";
+import NavBar from "../common/NavBar";
+import Footer from "../common/Footer";
 
 const SignIn = () => {
   const { session } = useContext(UserContext);

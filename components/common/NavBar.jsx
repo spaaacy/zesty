@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useContext } from "react";
-import { Button, buttonVariants } from "./ui/button";
+import { Button, buttonVariants } from "../ui/button";
 
 const NavBar = () => {
   const { session } = useContext(UserContext);
@@ -27,7 +27,7 @@ const NavBar = () => {
 
   return (
     <nav>
-      <div className="flex items-center py-2 px-8">
+      <div className="flex items-center py-4 px-12">
         <Link href="/" className="flex items-center justify-center">
           <span className="font-semibold text-2xl ml-2">Zesty</span>
         </Link>
@@ -36,9 +36,16 @@ const NavBar = () => {
           {showSignIn && (
             <div>
               {session?.data.session ? (
-                <Button onClick={signOut} variant="outline">
-                  Sign Out
-                </Button>
+                <div className="gap-2 flex items-center justify-center">
+                  {pathname !== "/start-selling" && (
+                    <Link href="start-selling" className={buttonVariants()}>
+                      Start selling
+                    </Link>
+                  )}
+                  <Button onClick={signOut} variant="outline">
+                    Sign Out
+                  </Button>
+                </div>
               ) : (
                 <Link href="/signin" className={buttonVariants({ variant: "outline" })}>
                   Sign In

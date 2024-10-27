@@ -4,8 +4,7 @@ import { UserContext } from "@/context/UserContext";
 import { supabase } from "@/utils/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import Footer from "@/components/Footer";
-import NavBar from "@/components/NavBar";
+import Footer from "@/components/common/Footer";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -14,6 +13,8 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
 import { Alert, AlertTitle } from "@/components/ui/alert";
+import NavBar from "../common/NavBar";
+import Loader from "../common/Loader";
 
 const SignUp = () => {
   const { session } = useContext(UserContext);
@@ -100,7 +101,7 @@ const SignUp = () => {
       <NavBar />
 
       {loading ? (
-        <p>Loading...</p>
+        <Loader />
       ) : (
         <main>
           <Card className="mx-auto max-w-96">
