@@ -9,7 +9,7 @@ export async function GET(req, res) {
     const auth = await supabase.auth.setSession({ access_token, refresh_token });
     if (auth.error) throw auth.error;
 
-    const { id } = res.params;
+    const { id } = await res.params;
     const { data, error } = await supabase.from("user").select().eq("user_id", id).single();
     if (error) throw error;
     return NextResponse.json({ user: data }, { status: 200 });

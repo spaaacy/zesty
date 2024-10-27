@@ -15,6 +15,8 @@ import toast, { Toaster } from "react-hot-toast";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import NavBar from "../common/NavBar";
 import Loader from "../common/Loader";
+import ToastDefault from "../common/ToastDefault";
+import ToastError from "../common/ToastError";
 
 const SignUp = () => {
   const { session } = useContext(UserContext);
@@ -43,14 +45,7 @@ const SignUp = () => {
             user_id: session.data.session.user.id,
           }),
         });
-        if (response.status === 201)
-          toast.custom((t) => (
-            <span>
-              <Alert>
-                <AlertTitle>Registration successful</AlertTitle>
-              </Alert>
-            </span>
-          ));
+        if (response.status === 201) toast.custom((t) => <ToastDefault message="Registration successful" />);
         setTimeout(() => router.push("/"), 1000);
       } else {
         router.push("/");
@@ -73,24 +68,12 @@ const SignUp = () => {
       });
       if (error) throw error;
 
-      toast.custom((t) => (
-        <span>
-          <Alert>
-            <AlertTitle>Please confirm your email</AlertTitle>
-          </Alert>
-        </span>
-      ));
+      toast.custom((t) => <ToastDefault message="Please confirm your email" />);
       setTimeout(() => {
         router.push("/");
       }, 2000);
     } catch (error) {
-      toast.custom((t) => (
-        <span>
-          <Alert variant="destructive">
-            <AlertTitle>Oops, something went wrong...</AlertTitle>
-          </Alert>
-        </span>
-      ));
+      toast.custom((t) => <ToastError />);
       toast.error("Oops, something went wrong...");
       console.error(error);
     }

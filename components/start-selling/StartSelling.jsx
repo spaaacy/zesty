@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Footer from "../common/Footer";
 import Loader from "../common/Loader";
 import NavBar from "../common/NavBar";
@@ -11,10 +11,16 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { Textarea } from "../ui/textarea";
+import toast, { Toaster } from "react-hot-toast";
+import { UserContext } from "@/context/UserContext";
+import ToastError from "../common/ToastError";
+import { useRouter } from "next/navigation";
 
 const StartSelling = () => {
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
+  const { session } = useContext(UserContext);
+  const router = useRouter();
 
   const form = useForm({
     defaultValues: {
@@ -24,8 +30,42 @@ const StartSelling = () => {
     },
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    const userId = session.data.session.user.id;
+    if (!userId) return;
+    try {
+      setLoading(true);
+
+      const formData = new FormData();
+      formData.append(
+        "service",
+        JSON.stringify({
+          name: data.name,
+          description: data.description,
+          user_id: userId,
+        })
+      );
+      formData.append("image", data.image);
+
+      const response = await fetch("/api/service/create", {
+        method: "POST",
+        headers: {
+          "X-Supabase-Auth": session.data.session.access_token + " " + session.data.session.refresh_token,
+        },
+        body: formData,
+      });
+      if (response.status === 201) {
+        const { serviceId } = await response.json();
+        router.push(`/service/${serviceId}`);
+      } else {
+        const { error } = await response.json();
+        throw error;
+      }
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+      toast.custom((t) => <ToastError />);
+    }
   };
 
   const handleImageChange = (e) => {
@@ -123,6 +163,7 @@ const StartSelling = () => {
         </main>
       )}
       <Footer />
+      <Toaster />
     </div>
   );
 };

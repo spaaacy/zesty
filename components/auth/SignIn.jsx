@@ -14,6 +14,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import NavBar from "../common/NavBar";
 import Footer from "../common/Footer";
+import ToastError from "../common/ToastError";
 
 const SignIn = () => {
   const { session } = useContext(UserContext);
@@ -43,13 +44,7 @@ const SignIn = () => {
     if (data.user && data.session) {
       location.reload();
     } else {
-      toast.custom((t) => (
-        <span>
-          <Alert variant="destructive">
-            <AlertTitle>Oops, something went wrong...</AlertTitle>
-          </Alert>
-        </span>
-      ));
+      toast.custom((t) => <ToastError />);
       console.error(error);
     }
   };

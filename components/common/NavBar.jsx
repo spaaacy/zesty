@@ -38,8 +38,8 @@ const NavBar = () => {
               {session?.data.session ? (
                 <div className="gap-2 flex items-center justify-center">
                   {pathname !== "/start-selling" && (
-                    <Link href="start-selling" className={buttonVariants()}>
-                      Start selling
+                    <Link href="/start-selling" className={buttonVariants()}>
+                      Start Selling
                     </Link>
                   )}
                   <Button onClick={signOut} variant="outline">
