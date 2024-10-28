@@ -8,6 +8,8 @@ import Loader from "../common/Loader";
 import { UserContext } from "@/context/UserContext";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import Link from "next/link";
+import { buttonVariants } from "../ui/button";
 
 const StorePage = () => {
   const { session } = useContext(UserContext);
@@ -58,7 +60,7 @@ const StorePage = () => {
         <main>
           {store && (
             <div>
-              <div className="relative h-[16rem] drop-shadow-lg text-white p-4">
+              <div className="relative h-[16rem] drop-shadow-md text-white p-4">
                 <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-black opacity-80 to-transparent rounded-b-xl" />
                 <Image
                   src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}${process.env.NEXT_PUBLIC_STORAGE_PATH}/store-image/${store.id}/${store.image_id}`}
@@ -82,18 +84,39 @@ const StorePage = () => {
                   </p>
                 </div>
 
-                <div className="flex-1">
-                  <h2 className="mt-4 text-3xl font-bold mb-4">Products</h2>
+                <div className="mt-4 flex-1">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-3xl font-bold mb-4">Products</h2>
+                    {store?.user_id === session.data.session.user.id && (
+                      <Link
+                        className={buttonVariants({ variant: "outline" })}
+                        href={`/store/${params.id}/create-product`}
+                      >
+                        Create product
+                      </Link>
+                    )}
+                  </div>
 
                   <ul className="flex flex-col gap-4">
                     {products.map((p, i) => {
                       return (
-                        <Card key={i}>
-                          <CardHeader className="flex-row justify-between items-center w-full">
-                            <CardTitle>{p.name}</CardTitle>
-                            <p>{`$${p.price}`}</p>
-                          </CardHeader>
-                          <CardContent>{p.description}</CardContent>
+                        <Card className="flex p-4 gap-4" key={i}>
+                          <div className="relative w-20 h-20">
+                            <Image
+                              src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}${process.env.NEXT_PUBLIC_STORAGE_PATH}/store-image/${store.id}/${store.image_id}`}
+                              alt={`${p.name} image`}
+                              fill={true}
+                              className="object-cover mx-auto rounded z-50 "
+                            />
+                          </div>
+
+                          <div className="flex flex-col w-full">
+                            <div className="flex w-full">
+                              <h3 className="font-medium">{p.name}</h3>
+                              <p className="ml-auto mt-2">{`$${p.price}`}</p>
+                            </div>
+                            <p>{p.description}</p>
+                          </div>
                         </Card>
                       );
                     })}

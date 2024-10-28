@@ -14,20 +14,17 @@ import { Textarea } from "../ui/textarea";
 import toast, { Toaster } from "react-hot-toast";
 import { UserContext } from "@/context/UserContext";
 import ToastError from "../common/ToastError";
-import { useRouter } from "next/navigation";
 
-const StartSelling = () => {
+const CreateProduct = () => {
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const { session } = useContext(UserContext);
-  const router = useRouter();
 
   const form = useForm({
     defaultValues: {
       name: "",
       description: "",
-      unitNumber: "",
-      contactNumber: "",
+      price: "",
       image: null,
     },
   });
@@ -35,41 +32,41 @@ const StartSelling = () => {
   const onSubmit = async (data) => {
     const userId = session.data.session.user.id;
     if (!userId) return;
-    try {
-      setLoading(true);
+    // try {
+    //   setLoading(true);
 
-      const formData = new FormData();
-      formData.append(
-        "store",
-        JSON.stringify({
-          name: data.name,
-          description: data.description,
-          unit_number: data.unitNumber,
-          contact_number: data.contactNumber,
-          user_id: userId,
-        })
-      );
-      formData.append("image", data.image);
+    //   const formData = new FormData();
+    //   formData.append(
+    //     "store",
+    //     JSON.stringify({
+    //       name: data.name,
+    //       description: data.description,
+    //       unit_number: data.unitNumber,
+    //       contact_number: data.contactNumber,
+    //       user_id: userId,
+    //     })
+    //   );
+    //   formData.append("image", data.image);
 
-      const response = await fetch("/api/store/create", {
-        method: "POST",
-        headers: {
-          "X-Supabase-Auth": session.data.session.access_token + " " + session.data.session.refresh_token,
-        },
-        body: formData,
-      });
-      if (response.status === 201) {
-        const { storeId } = await response.json();
-        router.push(`/store/${storeId}`);
-      } else {
-        const { error } = await response.json();
-        throw error;
-      }
-    } catch (error) {
-      console.error(error);
-      setLoading(false);
-      toast.custom((t) => <ToastError />);
-    }
+    //   const response = await fetch("/api/store/create", {
+    //     method: "POST",
+    //     headers: {
+    //       "X-Supabase-Auth": session.data.session.access_token + " " + session.data.session.refresh_token,
+    //     },
+    //     body: formData,
+    //   });
+    //   if (response.status === 201) {
+    //     const { storeId } = await response.json();
+    //     router.push(`/store/${storeId}`);
+    //   } else {
+    //     const { error } = await response.json();
+    //     throw error;
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    //   setLoading(false);
+    //   toast.custom((t) => <ToastError />);
+    // }
   };
 
   const handleImageChange = (e) => {
@@ -121,54 +118,48 @@ const StartSelling = () => {
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    rules={{
-                      required: "Name is required",
-                      minLength: { value: 8, message: "Name must be at least 8 characters" },
-                    }}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input type="text" placeholder="My Store" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-4 w-full">
                     <FormField
                       control={form.control}
-                      name="unitNumber"
+                      name="name"
                       rules={{
-                        required: "Unit number is required",
-                        minLength: { value: 3, message: "Unit number must be at least 3 characters" },
+                        required: "Name is required",
+                        minLength: { value: 8, message: "Name must be at least 8 characters" },
                       }}
                       render={({ field }) => (
                         <FormItem className="w-full">
-                          <FormLabel>Unit Number</FormLabel>
+                          <FormLabel>Name</FormLabel>
                           <FormControl>
-                            <Input type="number" placeholder="Unit Number" {...field} />
+                            <Input type="text" placeholder="Product Name" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
-                    />{" "}
+                    />
                     <FormField
                       control={form.control}
-                      name="contactNumber"
+                      name="price"
                       rules={{
-                        required: "Contact number is required",
-                        minLength: { value: 10, message: "Contact number must be exactly 10 characters" },
-                        maxLength: { value: 10, message: "Contact number must be exactly 10 characters" },
+                        required: "Price is required",
                       }}
                       render={({ field }) => (
-                        <FormItem className="w-full">
-                          <FormLabel>Contact Number</FormLabel>
+                        <FormItem>
+                          <FormLabel>Price</FormLabel>
                           <FormControl>
-                            <Input type="number" placeholder="Contact Number" {...field} />
+                            <div className="flex items-center max-w-36 ml-1">
+                              <span className="text-gray-500 mr-2">$</span>
+                              <Input
+                                type="number"
+                                placeholder="9.99"
+                                className="flex-1"
+                                step="0.01"
+                                {...field}
+                                onBlur={(e) => {
+                                  let value = parseFloat(e.target.value || 0).toFixed(2);
+                                  field.onChange(value);
+                                }}
+                              />
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -186,7 +177,7 @@ const StartSelling = () => {
                       <FormItem>
                         <FormLabel>Description</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="Describle what your store's about" {...field} />
+                          <Textarea placeholder="Describle your product" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -209,4 +200,4 @@ const StartSelling = () => {
   );
 };
 
-export default StartSelling;
+export default CreateProduct;

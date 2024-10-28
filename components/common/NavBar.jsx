@@ -27,7 +27,7 @@ const NavBar = () => {
 
   return (
     <nav>
-      <div className="flex items-center py-4 max-w-[108rem] mx-auto">
+      <div className="flex items-center py-4 max-w-[108rem] mx-auto px-8">
         <Link href="/" className="flex items-center justify-center">
           <span className="font-bold text-4xl ml-2 text-[#facc15]">Zesty</span>
         </Link>
@@ -37,7 +37,7 @@ const NavBar = () => {
             <div>
               {session?.data.session ? (
                 <div className="gap-2 flex items-center justify-center">
-                  {pathname !== "/start-selling" && (
+                  {pathname === "/" && (
                     <Link href="/start-selling" className={buttonVariants()}>
                       Start Selling
                     </Link>
