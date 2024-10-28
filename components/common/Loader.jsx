@@ -15,7 +15,7 @@ const Loader = () => {
   return (
     <div className="flex flex-1 m-auto">
       <div className="m-auto">
-        <MoonLoader color={primaryColor} />
+        <MoonLoader color="#facc15" />
       </div>
     </div>
   );

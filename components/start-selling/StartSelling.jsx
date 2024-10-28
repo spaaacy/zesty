@@ -38,7 +38,7 @@ const StartSelling = () => {
 
       const formData = new FormData();
       formData.append(
-        "service",
+        "store",
         JSON.stringify({
           name: data.name,
           description: data.description,
@@ -47,7 +47,7 @@ const StartSelling = () => {
       );
       formData.append("image", data.image);
 
-      const response = await fetch("/api/service/create", {
+      const response = await fetch("/api/store/create", {
         method: "POST",
         headers: {
           "X-Supabase-Auth": session.data.session.access_token + " " + session.data.session.refresh_token,
@@ -55,8 +55,8 @@ const StartSelling = () => {
         body: formData,
       });
       if (response.status === 201) {
-        const { serviceId } = await response.json();
-        router.push(`/service/${serviceId}`);
+        const { storeId } = await response.json();
+        router.push(`/store/${storeId}`);
       } else {
         const { error } = await response.json();
         throw error;
@@ -87,7 +87,7 @@ const StartSelling = () => {
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <CardHeader>
-                  <CardTitle>Create Service</CardTitle>
+                  <CardTitle>Create Store</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2">
                   <FormField
@@ -128,7 +128,7 @@ const StartSelling = () => {
                       <FormItem>
                         <FormLabel>Name</FormLabel>
                         <FormControl>
-                          <Input type="text" placeholder="My Service" {...field} />
+                          <Input type="text" placeholder="My Store" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -145,7 +145,7 @@ const StartSelling = () => {
                       <FormItem>
                         <FormLabel>Description</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="What's your service about?" {...field} />
+                          <Textarea placeholder="Describle what your store's about" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

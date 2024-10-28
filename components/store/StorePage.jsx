@@ -1,7 +1,7 @@
 import NavBar from "../common/NavBar";
 import Footer from "../common/Footer";
 
-const ServicePage = () => {
+const StorePage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar />
@@ -11,4 +11,4 @@ const ServicePage = () => {
   );
 };
 
-export default ServicePage;
+export default StorePage;

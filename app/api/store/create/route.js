@@ -15,25 +15,23 @@ export async function POST(req, res) {
     if (auth.error) throw auth.error;
 
     const formData = await req.formData();
-    const service = JSON.parse(formData.get("service"));
+    const store = JSON.parse(formData.get("store"));
     const image = formData.get("image");
     const imageId = uuidv4();
-    const serviceId = uuidv4();
+    const storeId = uuidv4();
 
-    const product = await stripe.products.create({ name: service.name });
+    // const product = await stripe.products.create({ name: store.name });
 
-    let results = await supabase
-      .from("service")
-      .insert({ ...service, id: serviceId, image_id: imageId, stripe_product: product });
+    let results = await supabase.from("store").insert({ ...store, id: storeId, image_id: imageId });
     if (results.error) throw results.error;
 
-    results = await supabase.storage.from("service-image").upload(`${serviceId}/${imageId}`, image, {
+    results = await supabase.storage.from("store-image").upload(`${storeId}/${imageId}`, image, {
       cacheControl: 3600,
       upsert: true,
     });
     if (results.error) throw results.error;
 
-    return NextResponse.json({ message: "Service created successfully!", serviceId }, { status: 201 });
+    return NextResponse.json({ message: "Store created successfully!", storeId }, { status: 201 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error }, { status: 500 });

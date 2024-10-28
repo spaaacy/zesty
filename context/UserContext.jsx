@@ -41,7 +41,6 @@ export const UserProvider = ({ children }) => {
       });
       if (response.status === 200) {
         const { user } = await response.json();
-        console.log(user);
         setUser(user);
       } else {
         router.push("/signup?complete_registration=true");
