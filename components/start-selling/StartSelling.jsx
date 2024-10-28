@@ -26,6 +26,8 @@ const StartSelling = () => {
     defaultValues: {
       name: "",
       description: "",
+      unitNumber: "",
+      contactNumber: "",
       image: null,
     },
   });
@@ -42,6 +44,8 @@ const StartSelling = () => {
         JSON.stringify({
           name: data.name,
           description: data.description,
+          unit_number: data.unitNumber,
+          contact_number: data.contactNumber,
           user_id: userId,
         })
       );
@@ -134,6 +138,43 @@ const StartSelling = () => {
                       </FormItem>
                     )}
                   />
+                  <div className="flex items-center gap-4">
+                    <FormField
+                      control={form.control}
+                      name="unitNumber"
+                      rules={{
+                        required: "Unit number is required",
+                        minLength: { value: 3, message: "Unit number must be at least 3 characters" },
+                      }}
+                      render={({ field }) => (
+                        <FormItem className="w-full">
+                          <FormLabel>Unit Number</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Unit Number" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />{" "}
+                    <FormField
+                      control={form.control}
+                      name="contactNumber"
+                      rules={{
+                        required: "Contact number is required",
+                        minLength: { value: 10, message: "Contact number must be exactly 10 characters" },
+                        maxLength: { value: 10, message: "Contact number must be exactly 10 characters" },
+                      }}
+                      render={({ field }) => (
+                        <FormItem className="w-full">
+                          <FormLabel>Contact Number</FormLabel>
+                          <FormControl>
+                            <Input type="numeric" placeholder="Contact Number" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   <FormField
                     control={form.control}
                     name="description"

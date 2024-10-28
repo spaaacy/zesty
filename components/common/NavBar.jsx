@@ -27,9 +27,9 @@ const NavBar = () => {
 
   return (
     <nav>
-      <div className="flex items-center py-4 px-12">
+      <div className="flex items-center py-4 max-w-[108rem] mx-auto">
         <Link href="/" className="flex items-center justify-center">
-          <span className="font-semibold text-2xl ml-2">Zesty</span>
+          <span className="font-bold text-4xl ml-2 text-[#facc15]">Zesty</span>
         </Link>
 
         <div className="ml-auto flex gap-2 justify-center items-center">
