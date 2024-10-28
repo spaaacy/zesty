@@ -38,7 +38,6 @@ const Marketplace = () => {
       );
       if (response.status === 200) {
         const { stores } = await response.json();
-        console.log(stores);
         setStores(stores);
       }
     } catch (error) {

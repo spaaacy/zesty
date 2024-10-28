@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Footer from "../common/Footer";
 import Loader from "../common/Loader";
 import NavBar from "../common/NavBar";
@@ -13,7 +13,6 @@ import Image from "next/image";
 import { Textarea } from "../ui/textarea";
 import toast, { Toaster } from "react-hot-toast";
 import { UserContext } from "@/context/UserContext";
-import ToastError from "../common/ToastError";
 import { useRouter } from "next/navigation";
 
 const StartSelling = () => {
@@ -31,6 +30,12 @@ const StartSelling = () => {
       image: null,
     },
   });
+
+  useEffect(() => {
+    if (session) {
+      if (!session.data.session) router.push("/signin");
+    }
+  }, [session]);
 
   const onSubmit = async (data) => {
     const userId = session.data.session.user.id;
@@ -68,7 +73,7 @@ const StartSelling = () => {
     } catch (error) {
       console.error(error);
       setLoading(false);
-      toast.custom((t) => <ToastError />);
+      toast.error("Oops, something went wrong...");
     }
   };
 
@@ -91,7 +96,7 @@ const StartSelling = () => {
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 <CardHeader>
-                  <CardTitle>Create Store</CardTitle>
+                  <CardTitle className="text-xl">Create Store</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2">
                   <FormField
@@ -102,7 +107,9 @@ const StartSelling = () => {
                     }}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="font-medium">Image</FormLabel>
+                        <FormLabel className="font-medium">
+                          Image<span className="text-red-500"> *</span>
+                        </FormLabel>
                         {imagePreview && (
                           <Image
                             width={256}
@@ -130,7 +137,9 @@ const StartSelling = () => {
                     }}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel>
+                          Name<span className="text-red-500"> *</span>
+                        </FormLabel>
                         <FormControl>
                           <Input type="text" placeholder="My Store" {...field} />
                         </FormControl>
@@ -148,7 +157,9 @@ const StartSelling = () => {
                       }}
                       render={({ field }) => (
                         <FormItem className="w-full">
-                          <FormLabel>Unit Number</FormLabel>
+                          <FormLabel>
+                            Unit Number<span className="text-red-500"> *</span>
+                          </FormLabel>
                           <FormControl>
                             <Input type="number" placeholder="Unit Number" {...field} />
                           </FormControl>
@@ -166,7 +177,9 @@ const StartSelling = () => {
                       }}
                       render={({ field }) => (
                         <FormItem className="w-full">
-                          <FormLabel>Contact Number</FormLabel>
+                          <FormLabel>
+                            Contact Number<span className="text-red-500"> *</span>
+                          </FormLabel>
                           <FormControl>
                             <Input type="number" placeholder="Contact Number" {...field} />
                           </FormControl>
@@ -184,7 +197,9 @@ const StartSelling = () => {
                     }}
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description</FormLabel>
+                        <FormLabel>
+                          Description<span className="text-red-500"> *</span>
+                        </FormLabel>
                         <FormControl>
                           <Textarea placeholder="Describle what your store's about" {...field} />
                         </FormControl>

@@ -11,10 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
-import { Alert, AlertTitle } from "@/components/ui/alert";
 import NavBar from "../common/NavBar";
 import Footer from "../common/Footer";
-import ToastError from "../common/ToastError";
 
 const SignIn = () => {
   const { session } = useContext(UserContext);
@@ -44,7 +42,7 @@ const SignIn = () => {
     if (data.user && data.session) {
       location.reload();
     } else {
-      toast.custom((t) => <ToastError />);
+      toast.error("Oops, something went wrong...");
       console.error(error);
     }
   };
