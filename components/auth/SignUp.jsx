@@ -59,11 +59,24 @@ const SignUp = () => {
   const onSubmit = async (values) => {
     if (!session || session.data.session) return;
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data: authData, error } = await supabase.auth.signUp({
         email: values.email,
         password: values.password,
       });
       if (error) throw error;
+
+      const response = await fetch("/api/user/create", {
+        method: "POST",
+        body: JSON.stringify({
+          email: values.email,
+          user_id: authData.user.id,
+        }),
+      });
+
+      if (response.status === 500) {
+        const { error } = await response.json();
+        throw error;
+      }
 
       toast.success("Please confirm your email");
       setTimeout(() => {

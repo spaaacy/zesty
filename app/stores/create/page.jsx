@@ -1,4 +1,4 @@
-import StartSelling from "@/components/start-selling/StartSelling";
+import StartSelling from "@/components/store/StartSelling";
 
 export const metadata = {
   title: "Start Selling | Zesty",

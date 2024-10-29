@@ -9,7 +9,6 @@ import Link from "next/link";
 
 const Marketplace = () => {
   const { session } = useContext(UserContext);
-
   const [dataLoaded, setDataLoaded] = useState(false);
   const [loading, setLoading] = useState(true);
   const [stores, setStores] = useState();
@@ -56,7 +55,7 @@ const Marketplace = () => {
           stores.map((s, i) => {
             return (
               <Link
-                href={`/store/${s.id}`}
+                href={`/stores/${s.id}`}
                 key={i}
                 className="drop-shadow-lg relative h-64 text-white p-4 transition group hover:drop-shadow-xl"
               >

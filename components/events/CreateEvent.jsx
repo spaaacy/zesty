@@ -14,28 +14,38 @@ import { Textarea } from "../ui/textarea";
 import toast, { Toaster } from "react-hot-toast";
 import { UserContext } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
+import { DatePicker } from "../ui/date-picker";
+import { toTimestampTz } from "@/utils/toTimestamptz";
 
-const StartSelling = () => {
-  const [loading, setLoading] = useState(false);
+const CreateEvent = () => {
+  const [loading, setLoading] = useState(true);
   const [imagePreview, setImagePreview] = useState(null);
-  const { session } = useContext(UserContext);
+  const { session, user } = useContext(UserContext);
   const router = useRouter();
 
   const form = useForm({
     defaultValues: {
       name: "",
       description: "",
-      unitNumber: "",
-      contactNumber: "",
+      location: "",
       image: null,
+      date: null,
+      time: "",
     },
   });
 
   useEffect(() => {
     if (session) {
-      if (!session.data.session) router.push("/signin");
+      if (!session.data.session) {
+        router.push("/signin");
+      } else {
+        if (user)
+          if (!user.admin) {
+            router.push("/events");
+          } else setLoading(false);
+      }
     }
-  }, [session]);
+  }, [session, user]);
 
   const onSubmit = async (data) => {
     const userId = session.data.session.user.id;
@@ -44,19 +54,18 @@ const StartSelling = () => {
       setLoading(true);
 
       const formData = new FormData();
+      console.log(data);
       formData.append(
-        "store",
+        "event",
         JSON.stringify({
           name: data.name,
           description: data.description,
-          unit_number: data.unitNumber,
-          contact_number: data.contactNumber,
-          user_id: userId,
+          location: data.location,
+          datetime: toTimestampTz(data.date, data.time),
         })
       );
       formData.append("image", data.image);
-
-      const response = await fetch("/api/store/create", {
+      const response = await fetch("/api/event/create", {
         method: "POST",
         headers: {
           "X-Supabase-Auth": session.data.session.access_token + " " + session.data.session.refresh_token,
@@ -64,8 +73,8 @@ const StartSelling = () => {
         body: formData,
       });
       if (response.status === 201) {
-        const { storeId } = await response.json();
-        router.push(`/store/${storeId}`);
+        const { eventId } = await response.json();
+        router.push(`/events`);
       } else {
         const { error } = await response.json();
         throw error;
@@ -141,7 +150,7 @@ const StartSelling = () => {
                           Name<span className="text-red-500"> *</span>
                         </FormLabel>
                         <FormControl>
-                          <Input type="text" placeholder="My Store" {...field} />
+                          <Input type="text" placeholder="Event Name" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -150,45 +159,62 @@ const StartSelling = () => {
                   <div className="flex items-center gap-4">
                     <FormField
                       control={form.control}
-                      name="unitNumber"
+                      name="location"
                       rules={{
-                        required: "Unit number is required",
-                        minLength: { value: 3, message: "Unit number must be at least 3 characters" },
+                        required: "Location is required",
                       }}
                       render={({ field }) => (
                         <FormItem className="w-full">
                           <FormLabel>
-                            Unit Number<span className="text-red-500"> *</span>
+                            Location<span className="text-red-500"> *</span>
                           </FormLabel>
                           <FormControl>
-                            <Input type="number" placeholder="Unit Number" {...field} />
+                            <Input type="text" placeholder="Location" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
-                    />{" "}
+                    />
+
                     <FormField
                       control={form.control}
-                      name="contactNumber"
+                      name="date"
                       rules={{
-                        required: "Contact number is required",
-                        minLength: { value: 10, message: "Contact number must be exactly 10 characters" },
-                        maxLength: { value: 10, message: "Contact number must be exactly 10 characters" },
+                        required: "Date is required",
                       }}
                       render={({ field }) => (
-                        <FormItem className="w-full">
+                        <FormItem>
                           <FormLabel>
-                            Contact Number<span className="text-red-500"> *</span>
+                            Date<span className="text-red-500"> *</span>
                           </FormLabel>
                           <FormControl>
-                            <Input type="number" placeholder="Contact Number" {...field} />
+                            <DatePicker {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="time"
+                      rules={{
+                        required: "Time is required",
+                      }}
+                      render={({ field }) => (
+                        <FormItem className="">
+                          <FormLabel>
+                            Time<span className="text-red-500"> *</span>
+                          </FormLabel>
+                          <FormControl>
+                            <Input type="time" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
-                  <FormField
+                  {/* <FormField
                     control={form.control}
                     name="description"
                     rules={{
@@ -201,12 +227,12 @@ const StartSelling = () => {
                           Description<span className="text-red-500"> *</span>
                         </FormLabel>
                         <FormControl>
-                          <Textarea placeholder="Describle what your store's about" {...field} />
+                          <Textarea placeholder="What's the event about?" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                  /> */}
                 </CardContent>
                 <CardFooter>
                   <Button type="submit" className="ml-auto">
@@ -224,4 +250,4 @@ const StartSelling = () => {
   );
 };
 
-export default StartSelling;
+export default CreateEvent;

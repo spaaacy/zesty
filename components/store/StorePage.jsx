@@ -72,7 +72,7 @@ const StorePage = () => {
         const { store } = await response.json();
         setStore(store);
       } else {
-        // router.push("/");
+        router.push("/");
       }
     } catch (error) {
       console.error(error);
@@ -108,9 +108,13 @@ const StorePage = () => {
                     <span className="font-semibold">Unit: </span>
                     {store.unit_number}
                   </p>
-                  <p className="text text-gray-800 font-normal  ">
+                  <p className="text text-gray-800 font-normal">
                     <span className="font-semibold">Contact: </span>
-                    {store.contact_number}
+                    {store.contact_number &&
+                      `(${String(store.contact_number).slice(0, 3)}) ${String(store.contact_number).slice(
+                        3,
+                        6
+                      )}-${String(store.contact_number).slice(6)}`}
                   </p>
                 </div>
 
@@ -144,7 +148,7 @@ const StorePage = () => {
                             <div className="flex flex-col w-full">
                               <div className="flex w-full">
                                 <h3 className="font-medium">{p.name}</h3>
-                                <p className="ml-auto mt-2">{`$${p.price}`}</p>
+                                <p className="ml-auto mt-2">{`$${p.price.toFixed(2)}`}</p>
                               </div>
                               <p>{p.description}</p>
                             </div>
@@ -164,56 +168,3 @@ const StorePage = () => {
 };
 
 export default StorePage;
-
-// const products = [
-//   {
-//     name: "Classic Margherita Pizza",
-//     description: "A traditional Italian pizza topped with fresh tomatoes, mozzarella cheese, and basil.",
-//     price: 12.99,
-//   },
-//   {
-//     name: "Spicy Tuna Roll",
-//     description: "A sushi roll filled with spicy tuna, avocado, and cucumber, topped with sesame seeds.",
-//     price: 8.49,
-//   },
-//   {
-//     name: "BBQ Chicken Wings",
-//     description: "Juicy chicken wings smothered in tangy BBQ sauce, served with a side of ranch.",
-//     price: 10.99,
-//   },
-//   {
-//     name: "Caesar Salad",
-//     description: "Crisp romaine lettuce tossed with Caesar dressing, croutons, and Parmesan cheese.",
-//     price: 7.49,
-//   },
-//   {
-//     name: "Vegan Burrito Bowl",
-//     description: "A healthy bowl with rice, black beans, avocado, and grilled veggies, topped with salsa.",
-//     price: 9.99,
-//   },
-//   {
-//     name: "Grilled Salmon",
-//     description: "Freshly grilled salmon served with a side of steamed vegetables and lemon butter sauce.",
-//     price: 15.99,
-//   },
-//   {
-//     name: "Avocado Toast",
-//     description: "Smashed avocado on toasted sourdough bread, topped with cherry tomatoes and feta.",
-//     price: 6.99,
-//   },
-//   {
-//     name: "Chocolate Chip Cookies",
-//     description: "Soft and chewy cookies loaded with chocolate chips, perfect for a sweet treat.",
-//     price: 3.49,
-//   },
-//   {
-//     name: "Penne Alfredo Pasta",
-//     description: "Creamy Alfredo sauce over penne pasta, garnished with parsley and Parmesan cheese.",
-//     price: 11.49,
-//   },
-//   {
-//     name: "Fruit Smoothie",
-//     description: "A refreshing smoothie blend of strawberries, bananas, and orange juice.",
-//     price: 5.99,
-//   },
-// ];
