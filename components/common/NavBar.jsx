@@ -14,6 +14,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "../ui/navigation-menu";
+import UserAvatar from "./UserAvatar";
 
 const NavBar = () => {
   const { session, user } = useContext(UserContext);
@@ -67,9 +68,10 @@ const NavBar = () => {
                       Start Selling
                     </Link>
                   )}
-                  <Button onClick={signOut} variant="outline">
+                  <Button onClick={signOut} variant="outline" className="mr-4">
                     Sign Out
                   </Button>
+                  {user && <UserAvatar size={40} username={user.email} />}
                 </div>
               ) : (
                 <Link href="/signin" className={buttonVariants({ variant: "outline" })}>
