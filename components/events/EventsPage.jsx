@@ -6,6 +6,7 @@ import Loader from "../common/Loader";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
+import { fromTimestamptz } from "@/utils/fromTimestamptz";
 
 const EventsPage = () => {
   const { session } = useContext(UserContext);
@@ -56,16 +57,16 @@ const EventsPage = () => {
                 />
 
                 <div className="group-hover:opacity-100 opacity-0 transition absolute top-0 left-0 p-4 w-full flex">
-                  <Badge variant="secondary" className="font-light">
+                  <Badge variant="secondary" className="font-semibold">
                     {e.location}
                   </Badge>
-                  <Badge variant="secondary" className="ml-auto font-light">
-                    {e.datetime}
+                  <Badge variant="secondary" className="ml-auto font-semibold">
+                    {fromTimestamptz(e.datetime)}
                   </Badge>
                 </div>
 
                 <div className="group-hover:opacity-100 opacity-0 transition absolute bottom-0 left-0 p-4 w-full flex flex-col items-start">
-                  <Badge className="text-2xl font-semibold">{e.name}</Badge>
+                  <h3 className="bg-black text-white px-4 py-2 text-2xl font-semibold">{e.name}</h3>
                   {/* <p className="px-4 py-2 bg-black text-white text-sm">{e.description}</p> */}
                 </div>
               </div>

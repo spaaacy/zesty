@@ -134,6 +134,11 @@ const StorePage = () => {
                   <ul className="flex flex-col gap-4">
                     {products &&
                       products.map((p, i) => {
+                        {
+                          console.log(
+                            `${process.env.NEXT_PUBLIC_SUPABASE_URL}${process.env.NEXT_PUBLIC_STORAGE_PATH}/product-image/${store.id}/${p.id}/${p.image_id}`
+                          );
+                        }
                         return (
                           <Card className="flex p-4 gap-4" key={i}>
                             <div className="relative w-24 h-20">

@@ -1,5 +1,6 @@
 "use client";
 
+import { FcGoogle } from "react-icons/fc";
 import { UserContext } from "@/context/UserContext";
 import { supabase } from "@/utils/supabase";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -56,6 +57,21 @@ const SignUp = () => {
     }
   }, [session]);
 
+  const signInWithGoogle = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const onSubmit = async (values) => {
     if (!session || session.data.session) return;
     try {
@@ -78,9 +94,9 @@ const SignUp = () => {
         throw error;
       }
 
-      toast.success("Please confirm your email");
+      toast.success("Registration successful");
       setTimeout(() => {
-        router.push("/");
+        location.reload();
       }, 2000);
     } catch (error) {
       toast.error("Oops, something went wrong...");
@@ -165,14 +181,22 @@ const SignUp = () => {
                     )}
                   />
                 </CardContent>
-                <CardFooter>
-                  <Link href={"/signin"} className={`text-xs hover:underline text-blue-700 `}>
-                    Already have an account? Sign in.
-                  </Link>
-                  <Button type="submit" className="ml-auto">
-                    Submit
+                <CardFooter className="flex flex-col gap-6">
+                  <div className="flex items-center justify-between w-full">
+                    <Link href={"/signin"} className={`text-xs hover:underline text-blue-700 `}>
+                      Already have an account? Sign in.
+                    </Link>
+                    <Button type="submit" className="ml-auto">
+                      Submit
+                    </Button>
+                  </div>
+                  <Button onClick={signInWithGoogle} type="button" variant="outline" className="w-full">
+                    <FcGoogle className="text-xl" />
+                    <span>Continue with Google</span>
                   </Button>
                 </CardFooter>
+
+                <div></div>
               </form>
             </Form>
           </Card>

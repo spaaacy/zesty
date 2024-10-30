@@ -1,5 +1,6 @@
 "use client";
 
+import { FcGoogle } from "react-icons/fc";
 import { UserContext } from "@/context/UserContext";
 import { supabase } from "@/utils/supabase";
 import { useRouter } from "next/navigation";
@@ -30,6 +31,21 @@ const SignIn = () => {
       router.push("/");
     }
   }, [session]);
+
+  const signInWithGoogle = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const onSubmit = async (values) => {
     if (!session) return;
@@ -99,12 +115,18 @@ const SignIn = () => {
                   )}
                 />
               </CardContent>
-              <CardFooter>
-                <Link href={"/signup"} className={`text-xs hover:underline text-blue-700 `}>
-                  Don't have an account? Sign up.
-                </Link>
-                <Button type="submit" className="ml-auto">
-                  Submit
+              <CardFooter className="flex flex-col gap-6">
+                <div className="flex items-center justify-between w-full">
+                  <Link href={"/signup"} className={`text-xs hover:underline text-blue-700 `}>
+                    Don't have an account? Sign up.
+                  </Link>
+                  <Button type="submit" className="ml-auto">
+                    Submit
+                  </Button>
+                </div>
+                <Button onClick={signInWithGoogle} type="button" variant="outline" className="w-full">
+                  <FcGoogle className="text-xl" />
+                  <span>Continue with Google</span>
                 </Button>
               </CardFooter>
             </form>
