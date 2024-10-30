@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "../styles/globals.css";
 import { UserProvider } from "@/context/UserContext";
+import GoogleAnalytics from "@/components/common/GoogleAnalytics";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
