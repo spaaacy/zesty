@@ -50,7 +50,7 @@ const Marketplace = () => {
   return (
     <main className="max-w-[100rem]">
       <h1 className="text-3xl font-bold mb-4">Available Stores</h1>
-      <div className="grid grid-cols-4 gap-8">
+      <div className="grid grid-cols-4 gap-8 max-sm:flex max-sm:flex-col">
         {stores &&
           stores.map((s, i) => {
             return (

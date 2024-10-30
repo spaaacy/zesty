@@ -42,11 +42,11 @@ const EventsPage = () => {
   return (
     <main className="max-w-[100rem]">
       <h1 className="text-3xl font-bold mb-4">Upcoming Events</h1>
-      <div className="grid grid-cols-3 items-center gap-4">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 items-center gap-4 max-sm:flex-col max-sm:flex">
         {events &&
           events.map((e, i) => {
             return (
-              <div key={i} className="h-[40rem] overflow-hidden p-4 relative group transition rounded-xl">
+              <div key={i} className="h-[40rem] overflow-hidden p-4 relative group transition rounded-xl w-full">
                 {/* <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-t to-slate-300 group-hover:opacity-60 opacity-0 from-transparent rounded-t-xl transition" /> */}
                 {/* <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-slate-300 group-hover:opacity-60 opacity-0 to-transparent rounded-b-xl  transition" /> */}
                 <Image
@@ -56,7 +56,7 @@ const EventsPage = () => {
                   className="object-cover -z-50 group-hover:scale-105 transition ease-in-out duration-300"
                 />
 
-                <div className="group-hover:opacity-100 opacity-0 transition absolute top-0 left-0 p-4 w-full flex">
+                <div className="group-hover:opacity-100 opacity-0 transition absolute top-0 left-0 p-4 w-full flex gap-2">
                   <Badge variant="secondary" className="font-semibold">
                     {e.location}
                   </Badge>
