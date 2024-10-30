@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import Footer from "@/components/common/Footer";
 import NavBar from "@/components/common/NavBar";
-import Marketplace from "@/components/landing-page/Marketplace";
+import Marketplace from "@/components/stores/Marketplace";
 
 export default function Home() {
   return (
