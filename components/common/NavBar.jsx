@@ -99,11 +99,11 @@ const NavBar = () => {
         </div>
       </NavigationMenu>
       {showDropdown && (
-        <div className="flex flex-col gap-2 font-semibold px-4 sm:hidden">
-          <Link className={buttonVariants({ variant: "outline" })} href={"/stores"}>
+        <div className="flex flex-col gap-2 font-semibold px-4 sm:hidden py-2">
+          <Link className={`z-50 ${buttonVariants({ variant: "outline" })}`} href={"/stores"}>
             Stores
           </Link>
-          <Link className={buttonVariants({ variant: "outline" })} href={"/events"}>
+          <Link className={`z-50 ${buttonVariants({ variant: "outline" })}`} href={"/events"}>
             Events
           </Link>
         </div>
