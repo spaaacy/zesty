@@ -20,6 +20,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
+      </head>
       <UserProvider>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
       </UserProvider>
