@@ -40,14 +40,14 @@ const NavBar = () => {
 
   return (
     <nav>
-      <NavigationMenu className="flex items-center py-4 max-w-[108rem] mx-auto px-8">
+      <NavigationMenu className="flex items-center py-4 max-w-[108rem] mx-auto xl:px-8 px-2">
         <Link href="/" className="flex items-center justify-center">
           <span className={`${modak.className} font-bold text-4xl ml-2 text-[#facc15] bg-black px-4 py-1 rounded-full`}>
             zesty
           </span>
         </Link>
 
-        <NavigationMenuList className="ml-12 gap-2">
+        <NavigationMenuList className="xl:ml-12 mx-4 gap-2">
           <NavigationMenuItem>
             <Link href="/stores" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>Stores</NavigationMenuLink>
@@ -78,7 +78,7 @@ const NavBar = () => {
                   <Button onClick={signOut} variant="outline" className="mr-4">
                     Sign Out
                   </Button>
-                  {user && <UserAvatar size={40} username={user.email} />}
+                  {user && <UserAvatar className="max-sm:hidden" size={40} username={user.email} />}
                 </div>
               ) : (
                 <Link href="/signin" className={buttonVariants({ variant: "outline" })}>
