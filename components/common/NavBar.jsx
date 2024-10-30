@@ -2,7 +2,7 @@
 
 import { UserContext } from "@/context/UserContext";
 import { supabase } from "@/utils/supabase";
-import Image from "next/image";
+import { Modak } from "next/font/google";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useContext } from "react";
@@ -15,6 +15,11 @@ import {
   navigationMenuTriggerStyle,
 } from "../ui/navigation-menu";
 import UserAvatar from "./UserAvatar";
+
+const modak = Modak({
+  subsets: ["latin"],
+  weight: "400",
+});
 
 const NavBar = () => {
   const { session, user } = useContext(UserContext);
@@ -37,7 +42,9 @@ const NavBar = () => {
     <nav>
       <NavigationMenu className="flex items-center py-4 max-w-[108rem] mx-auto px-8">
         <Link href="/" className="flex items-center justify-center">
-          <span className="font-bold text-4xl ml-2 text-[#facc15]">Zesty</span>
+          <span className={`${modak.className} font-bold text-4xl ml-2 text-[#facc15] bg-black px-4 py-1 rounded-full`}>
+            zesty
+          </span>
         </Link>
 
         <NavigationMenuList className="ml-12 gap-2">

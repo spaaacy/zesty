@@ -1,4 +1,4 @@
-import StorePage from "@/components/store/StorePage";
+import StorePage from "@/components/stores/StorePage";
 export const dynamic = "force-dynamic";
 
 const Page = () => {
